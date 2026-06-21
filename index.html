@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postapotycoon Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: capitalize;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #555;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #0056b3;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .catalog-cell {
+            font-weight: 600;
+            color: #333;
+            width: 120px;
+            min-width: 80px;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            width: 100%;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .section h2 {
+                font-size: 1.1em;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            th, td {
+                padding: 6px;
+            }
+
+            .catalog-cell {
+                width: 70px;
+                min-width: 60px;
+                font-size: 0.9em;
+            }
+
+            input[type="number"],
+            input[type="text"] {
+                padding: 6px;
+                font-size: 0.9em;
+            }
+
+            label {
+                font-size: 0.85em;
+            }
+
+            button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+
+            .tech-parameters {
+                gap: 10px;
+            }
+
+            .tech-param-group {
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.2em;
+                margin-bottom: 15px;
+            }
+
+            table {
+                font-size: 0.75em;
+            }
+
+            th, td {
+                padding: 4px;
+            }
+
+            .catalog-cell {
+                width: auto;
+                min-width: 50px;
+            }
+
+            input[type="number"],
+            input[type="text"] {
+                padding: 4px;
+                font-size: 0.8em;
+            }
+
+            label {
+                font-size: 0.75em;
+            }
+
+            button {
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        .tech-parameters {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tech-param-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tech-param-group label {
+            margin-bottom: 0;
+            min-width: 180px;
+            white-space: nowrap;
+        }
+
+        .tech-param-group input {
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .btn-clear {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background-color: #5a6268;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .status-message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .section-tbd {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #ff9800;
+            border-radius: 4px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Postapotycoon Calculator</h1>
+
+        <!-- Section 1: Basic Data -->
+        <div class="section">
+            <h2>Basic Data</h2>
+            <form id="basicDataForm">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Catalog</th>
+                            <th>Prod Value</th>
+                            <th>Store Max</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="catalog-cell">Money</td>
+                            <td><input type="text" id="money_prod" name="money_prod" placeholder="e.g., 100M"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="catalog-cell">Food</td>
+                            <td><input type="text" id="food_prod" name="food_prod" placeholder="e.g., 100M"></td>
+                            <td><input type="text" id="food_store" name="food_store" placeholder="e.g., 100M"></td>
+                        </tr>
+                        <tr>
+                            <td class="catalog-cell">Wood</td>
+                            <td><input type="text" id="wood_prod" name="wood_prod" placeholder="e.g., 100M"></td>
+                            <td><input type="text" id="wood_store" name="wood_store" placeholder="e.g., 100M"></td>
+                        </tr>
+                        <tr>
+                            <td class="catalog-cell">Stone</td>
+                            <td><input type="text" id="stone_prod" name="stone_prod" placeholder="e.g., 100M"></td>
+                            <td><input type="text" id="stone_store" name="stone_store" placeholder="e.g., 100M"></td>
+                        </tr>
+                        <tr>
+                            <td class="catalog-cell">Iron</td>
+                            <td><input type="text" id="iron_prod" name="iron_prod" placeholder="e.g., 100M"></td>
+                            <td><input type="text" id="iron_store" name="iron_store" placeholder="e.g., 100M"></td>
+                        </tr>
+                        <tr>
+                            <td class="catalog-cell">Chip</td>
+                            <td><input type="text" id="chip_prod" name="chip_prod" placeholder="e.g., 100M"></td>
+                            <td><input type="text" id="chip_store" name="chip_store" placeholder="e.g., 100M"></td>
+                        </tr>
+                        <tr>
+                            <td class="catalog-cell">Oil</td>
+                            <td><input type="text" id="oil_prod" name="oil_prod" placeholder="e.g., 100M"></td>
+                            <td><input type="text" id="oil_store" name="oil_store" placeholder="e.g., 100M"></td>
+                        </tr>
+                        <tr>
+                            <td class="catalog-cell">U-Battery</td>
+                            <td><input type="text" id="ubattery_prod" name="ubattery_prod" placeholder="e.g., 100M"></td>
+                            <td><input type="text" id="ubattery_store" name="ubattery_store" placeholder="e.g., 100M"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="color: #555; margin-top: 30px; margin-bottom: 15px;">Technology Parameters</h3>
+                <div class="tech-parameters">
+                    <div class="tech-param-group">
+                        <label for="tech_100offTime">Tech (100% Offline Time)</label>
+                        <input type="text" id="tech_100offTime" name="tech_100offTime" placeholder="Default: 60">
+                    </div>
+                    <div class="tech-param-group">
+                        <label for="tech_maxOffTime">Tech (Max Offline Time)</label>
+                        <input type="text" id="tech_maxOffTime" name="tech_maxOffTime" placeholder="Default: 180">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn-save" onclick="saveData()">Save</button>
+                    <button type="button" class="btn-clear" onclick="clearData()">Clear All</button>
+                </div>
+
+                <div class="status-message" id="statusMessage"></div>
+            </form>
+        </div>
+
+        <!-- Section 2: Income Calculator -->
+        <div class="section">
+            <h2>Income Calculator</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Catalog</th>
+                        <th>1hr Income</th>
+                        <th>Max Store Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="catalog-cell">Money</td>
+                        <td><input type="text" id="income_money_1h" readonly></td>
+                        <td style="text-align: center; font-weight: bold;">N/A</td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Food</td>
+                        <td><input type="text" id="income_food_1h" readonly></td>
+                        <td><input type="text" id="time_food_max" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Wood</td>
+                        <td><input type="text" id="income_wood_1h" readonly></td>
+                        <td><input type="text" id="time_wood_max" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Stone</td>
+                        <td><input type="text" id="income_stone_1h" readonly></td>
+                        <td><input type="text" id="time_stone_max" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Iron</td>
+                        <td><input type="text" id="income_iron_1h" readonly></td>
+                        <td><input type="text" id="time_iron_max" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Chip</td>
+                        <td><input type="text" id="income_chip_1h" readonly></td>
+                        <td><input type="text" id="time_chip_max" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Oil</td>
+                        <td><input type="text" id="income_oil_1h" readonly></td>
+                        <td><input type="text" id="time_oil_max" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">U-Battery</td>
+                        <td><input type="text" id="income_ubattery_1h" readonly></td>
+                        <td><input type="text" id="time_ubattery_max" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 3: Target Income with Offline Reward -->
+        <div class="section">
+            <h2>Target Income with Offline Reward</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Catalog</th>
+                        <th>Target Stock</th>
+                        <th>Current Stock</th>
+                        <th>Revenue (max)</th>
+                        <th>Revenue (no-bonus)</th>
+                        <th>Revenue (+offline)</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="catalog-cell">Food</td>
+                        <td><input type="text" id="target_food_target" name="target_food_target" placeholder="e.g., 100M"></td>
+                        <td><input type="text" id="target_food_current" name="target_food_current" placeholder="e.g., 50M"></td>
+                        <td><input type="text" id="target_food_max" readonly></td>
+                        <td><input type="text" id="target_food_nobonus" readonly></td>
+                        <td><input type="text" id="target_food_offline" readonly></td>
+                        <td><input type="text" id="target_food_comment" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Wood</td>
+                        <td><input type="text" id="target_wood_target" name="target_wood_target" placeholder="e.g., 100M"></td>
+                        <td><input type="text" id="target_wood_current" name="target_wood_current" placeholder="e.g., 50M"></td>
+                        <td><input type="text" id="target_wood_max" readonly></td>
+                        <td><input type="text" id="target_wood_nobonus" readonly></td>
+                        <td><input type="text" id="target_wood_offline" readonly></td>
+                        <td><input type="text" id="target_wood_comment" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Stone</td>
+                        <td><input type="text" id="target_stone_target" name="target_stone_target" placeholder="e.g., 100M"></td>
+                        <td><input type="text" id="target_stone_current" name="target_stone_current" placeholder="e.g., 50M"></td>
+                        <td><input type="text" id="target_stone_max" readonly></td>
+                        <td><input type="text" id="target_stone_nobonus" readonly></td>
+                        <td><input type="text" id="target_stone_offline" readonly></td>
+                        <td><input type="text" id="target_stone_comment" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Iron</td>
+                        <td><input type="text" id="target_iron_target" name="target_iron_target" placeholder="e.g., 100M"></td>
+                        <td><input type="text" id="target_iron_current" name="target_iron_current" placeholder="e.g., 50M"></td>
+                        <td><input type="text" id="target_iron_max" readonly></td>
+                        <td><input type="text" id="target_iron_nobonus" readonly></td>
+                        <td><input type="text" id="target_iron_offline" readonly></td>
+                        <td><input type="text" id="target_iron_comment" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Chip</td>
+                        <td><input type="text" id="target_chip_target" name="target_chip_target" placeholder="e.g., 100M"></td>
+                        <td><input type="text" id="target_chip_current" name="target_chip_current" placeholder="e.g., 50M"></td>
+                        <td><input type="text" id="target_chip_max" readonly></td>
+                        <td><input type="text" id="target_chip_nobonus" readonly></td>
+                        <td><input type="text" id="target_chip_offline" readonly></td>
+                        <td><input type="text" id="target_chip_comment" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">Oil</td>
+                        <td><input type="text" id="target_oil_target" name="target_oil_target" placeholder="e.g., 100M"></td>
+                        <td><input type="text" id="target_oil_current" name="target_oil_current" placeholder="e.g., 50M"></td>
+                        <td><input type="text" id="target_oil_max" readonly></td>
+                        <td><input type="text" id="target_oil_nobonus" readonly></td>
+                        <td><input type="text" id="target_oil_offline" readonly></td>
+                        <td><input type="text" id="target_oil_comment" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="catalog-cell">U-Battery</td>
+                        <td><input type="text" id="target_ubattery_target" name="target_ubattery_target" placeholder="e.g., 100M"></td>
+                        <td><input type="text" id="target_ubattery_current" name="target_ubattery_current" placeholder="e.g., 50M"></td>
+                        <td><input type="text" id="target_ubattery_max" readonly></td>
+                        <td><input type="text" id="target_ubattery_nobonus" readonly></td>
+                        <td><input type="text" id="target_ubattery_offline" readonly></td>
+                        <td><input type="text" id="target_ubattery_comment" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="button-group">
+                <button type="button" class="btn-save" onclick="recountTargetSection()">Recount</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default values for tech parameters
+        const TECH_DEFAULTS = {
+            tech_100offTime: 60,
+            tech_maxOffTime: 180
+        };
+
+        // Validate and set minimum values for tech parameters
+        function validateTechValue(fieldId, value) {
+            const numValue = parseInputValue(value);
+            const defaultValue = TECH_DEFAULTS[fieldId];
+            
+            if (numValue > 0 && numValue < defaultValue) {
+                return defaultValue.toString();
+            }
+            return value;
+        }
+
+        // Validate that current stock is not negative
+        function validateCurrentStock(fieldId, value) {
+            const numValue = parseInputValue(value);
+            if (numValue < 0) {
+                return '0';
+            }
+            return value;
+        }
+
+        function getStorage(name) {
+            return localStorage.getItem(name);
+        }
+
+        function setStorage(name, value) {
+            localStorage.setItem(name, value);
+        }
+
+        function deleteStorage(name) {
+            localStorage.removeItem(name);
+        }
+
+        function deleteStorage(name) {
+            localStorage.removeItem(name);
+        }
+
+        // Form field IDs
+        const fieldIds = [
+            'money_prod',
+            'food_prod', 'food_store',
+            'wood_prod', 'wood_store',
+            'stone_prod', 'stone_store',
+            'iron_prod', 'iron_store',
+            'chip_prod', 'chip_store',
+            'oil_prod', 'oil_store',
+            'ubattery_prod', 'ubattery_store',
+            'tech_100offTime', 'tech_maxOffTime',
+            'target_food_target', 'target_food_current',
+            'target_wood_target', 'target_wood_current',
+            'target_stone_target', 'target_stone_current',
+            'target_iron_target', 'target_iron_current',
+            'target_chip_target', 'target_chip_current',
+            'target_oil_target', 'target_oil_current',
+            'target_ubattery_target', 'target_ubattery_current'
+        ];
+
+        // Load data from localStorage when page loads
+        function loadData() {
+            fieldIds.forEach(id => {
+                const value = getStorage(id);
+                if (value) {
+                    document.getElementById(id).value = value;
+                } else if (TECH_DEFAULTS[id]) {
+                    // Set default value if available and no stored value
+                    document.getElementById(id).value = TECH_DEFAULTS[id];
+                    setStorage(id, TECH_DEFAULTS[id]);
+                }
+            });
+
+            // Show info message if data was loaded
+            const hasData = fieldIds.some(id => getStorage(id) !== null);
+            if (hasData) {
+                showStatusMessage('Data loaded from previous session', 'info');
+            }
+
+            // Attach event listeners for auto-save and validation
+            fieldIds.forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    let value = this.value;
+                    // Validate tech parameters
+                    if (TECH_DEFAULTS[id]) {
+                        value = validateTechValue(id, value);
+                        this.value = value;
+                    }
+                    // Save to storage
+                    if (value) {
+                        setStorage(id, value);
+                    } else {
+                        deleteStorage(id);
+                    }
+                    // Recalculate if it's a tech field
+                    if (id.startsWith('tech_')) {
+                        updateAllIncomes();
+                    }
+                });
+            });
+        }
+
+        // Save all form data to localStorage
+        function saveData() {
+            fieldIds.forEach(id => {
+                const value = document.getElementById(id).value;
+                if (value) {
+                    setStorage(id, value);
+                } else {
+                    deleteStorage(id);
+                }
+            });
+            showStatusMessage('Data saved successfully!', 'success');
+        }
+
+        // Clear all data
+        function clearData() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                fieldIds.forEach(id => {
+                    document.getElementById(id).value = '';
+                    deleteStorage(id);
+                });
+                showStatusMessage('All data cleared!', 'success');
+            }
+        }
+
+        // Show status message
+        function showStatusMessage(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = 'status-message ' + type;
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                statusEl.className = 'status-message';
+            }, 3000);
+        }
+
+        // Parse value with M suffix (e.g., "1.25M" -> 1250000)
+        function parseInputValue(value) {
+            if (!value) return 0;
+            value = value.trim();
+            if (value.toUpperCase().endsWith('M')) {
+                const numPart = parseFloat(value.slice(0, -1));
+                return isNaN(numPart) ? 0 : numPart * 1000000;
+            }
+            const num = parseFloat(value);
+            return isNaN(num) ? 0 : num;
+        }
+
+        // Format value to display with M unit (e.g., 1250000 -> "1.25M")
+        function formatDisplayValue(value) {
+            if (value === 0) return '';
+            const millions = value / 1000000;
+            // Round to 2 decimal places
+            const rounded = Math.round(millions * 100) / 100;
+            return rounded + 'M';
+        }
+
+        // Calculate income for a resource
+        function calculateIncome(resource) {
+            const prodElement = document.getElementById(resource + '_prod');
+            if (!prodElement) return;
+            
+            const prodValue = parseInputValue(prodElement.value);
+            
+            const income1hElement = document.getElementById('income_' + resource + '_1h');
+            const timeMaxElement = document.getElementById('time_' + resource + '_max');
+            
+            if (!income1hElement || !timeMaxElement) return;
+            
+            if (prodValue === 0) {
+                income1hElement.value = '';
+                timeMaxElement.value = '';
+                return;
+            }
+
+            // Rule: prod value / 9 * 60 is 100% offline one minute income
+            const minute_income_100pct = prodValue * (60 / 9);
+            
+            // 1 hour = 60 minutes at full rate
+            const income1h = minute_income_100pct * 60;
+
+            // For 3hr income: check the 100% offline time parameter
+            const tech100offTimeElement = document.getElementById('tech_100offTime');
+            const tech100offTime = tech100offTimeElement ? parseInputValue(tech100offTimeElement.value) : 60;
+            let income3h;
+            
+            if (tech100offTime <= 0) {
+                // No 100% offline time specified, so all 180 minutes at 10% rate
+                income3h = minute_income_100pct * 180 * 0.1;
+            } else if (tech100offTime >= 180) {
+                // 100% offline time covers all 3 hours, so all at full rate
+                income3h = minute_income_100pct * 180;
+            } else {
+                // Partial: tech100offTime minutes at full, remaining at 10%
+                const fullPart = tech100offTime;
+                const reducedPart = 180 - tech100offTime;
+                income3h = minute_income_100pct * (fullPart + reducedPart * 0.1);
+            }
+
+            // Display with M unit
+            income1hElement.value = formatDisplayValue(income1h);
+
+            // Rule 5: Calculate max store time if store max exists
+            // max store time (minutes) = (store max / 1hr income) * 60
+            if (resource !== 'money') {
+                const storeMaxElement = document.getElementById(resource + '_store');
+                if (storeMaxElement) {
+                    const storeMax = parseInputValue(storeMaxElement.value);
+                    if (storeMax > 0 && income1h > 0) {
+                        const maxTimeMinutes = Math.floor((storeMax / income1h) * 60);
+                        timeMaxElement.value = maxTimeMinutes + 'min';
+                    } else {
+                        timeMaxElement.value = '';
+                    }
+                }
+            }
+        }
+
+        // Recalculate all incomes when basic data changes
+        function updateAllIncomes() {
+            const resources = ['money', 'food', 'wood', 'stone', 'iron', 'chip', 'oil', 'ubattery'];
+            resources.forEach(resource => calculateIncome(resource));
+        }
+
+        // Calculate target income comment for a resource
+        function calculateTargetComment(resource) {
+            const targetElement = document.getElementById('target_' + resource + '_target');
+            const currentElement = document.getElementById('target_' + resource + '_current');
+            const maxElement = document.getElementById('target_' + resource + '_max');
+            const noBonusElement = document.getElementById('target_' + resource + '_nobonus');
+            const offlineElement = document.getElementById('target_' + resource + '_offline');
+            const commentElement = document.getElementById('target_' + resource + '_comment');
+            
+            if (!targetElement || !currentElement || !maxElement || !noBonusElement || !offlineElement || !commentElement) return;
+            
+            const prodElement = document.getElementById(resource + '_prod');
+            const storeElement = document.getElementById(resource + '_store');
+            
+            if (!prodElement || !storeElement) return;
+            
+            const prodValue = parseInputValue(prodElement.value);
+            const storeMax = parseInputValue(storeElement.value);
+            const targetStock = parseInputValue(targetElement.value);
+            const currentStock = parseInputValue(currentElement.value);
+            
+            // If any required value is missing, clear output
+            if (prodValue === 0 || storeMax === 0 || targetStock === 0 || currentStock === 0) {
+                maxElement.value = '';
+                noBonusElement.value = '';
+                offlineElement.value = '';
+                commentElement.value = '';
+                return;
+            }
+            
+            // Calculate 210 minutes income (3.5 hours)
+            // Income per minute at 100% = prod_value / 9 * 60
+            const minute_income_100pct = prodValue * (60 / 9);
+            
+            // Get tech_100offTime to calculate mix of 100% and 10% income
+            const tech100offTimeElement = document.getElementById('tech_100offTime');
+            const tech100offTime = tech100offTimeElement ? parseInputValue(tech100offTimeElement.value) : 60;
+            
+            let income_210min;
+            if (tech100offTime <= 0) {
+                // All 210 minutes at 10% rate
+                income_210min = minute_income_100pct * 210 * 0.1;
+            } else if (tech100offTime >= 210) {
+                // All 210 minutes at 100% rate
+                income_210min = minute_income_100pct * 210;
+            } else {
+                // Partial: tech100offTime minutes at full, remaining at 10%
+                const fullPart = tech100offTime;
+                const reducedPart = 210 - tech100offTime;
+                income_210min = minute_income_100pct * (fullPart + reducedPart * 0.1);
+            }
+            
+            // Calculate what actually comes into storage (capped by available space)
+            const availableSpace = storeMax - currentStock;
+            const actualIncome = Math.min(income_210min, availableSpace);
+            const incomeWithBonus = actualIncome * 1.5;
+            
+            // Calculate offline stock: current + income with bonus, capped at store max
+            let offlineStock = currentStock + incomeWithBonus;
+            const isCappeAtMax = offlineStock > storeMax;
+            offlineStock = Math.min(offlineStock, storeMax);
+            
+            // Display all revenue values
+            maxElement.value = formatDisplayValue(income_210min);  // Uncapped 210-min production
+            noBonusElement.value = formatDisplayValue(actualIncome);  // What actually comes into storage (capped)
+            offlineElement.value = formatDisplayValue(incomeWithBonus);  // Revenue (no-bonus) + 50% bonus
+            
+            // Determine comment based on scenarios
+            let comment = '';
+            
+            // Scenario 1: You've reached or exceeded your target
+            // This is a success - you'll get enough resources
+            if (offlineStock >= targetStock) {
+                comment = 'success, just keep wait after offline reward';
+            }
+            // Scenario 2: Storage is full but target not reached
+            // Check if we can do better by upgrading product
+            else if (offlineStock >= storeMax) {
+                // Storage is capped, but we haven't reached target
+                // Calculate what product value would be needed
+                const neededIncome_210min = (targetStock - currentStock) / 1.5;
+                
+                let timeFactor;
+                if (tech100offTime >= 210) {
+                    timeFactor = 210;
+                } else if (tech100offTime <= 0) {
+                    timeFactor = 210 * 0.1;
+                } else {
+                    timeFactor = tech100offTime + (210 - tech100offTime) * 0.1;
+                }
+                
+                const requiredProd = neededIncome_210min / (timeFactor * 60 / 9);
+                comment = 'storage full - need to upgrade product value to ' + formatDisplayValue(requiredProd);
+            }
+            // Scenario 3: offline_stock is less than target and not capped at storage
+            // "need to upgrade product value to xxM"
+            else if (offlineStock < targetStock && !isCappeAtMax) {
+                // Income is insufficient to reach target, and we have storage space
+                // Calculate required income to reach target
+                // current + income * 1.5 >= target
+                // income >= (target - current) / 1.5
+                const neededIncome_210min = (targetStock - currentStock) / 1.5;
+                
+                // Calculate required prod value
+                let timeFactor;
+                if (tech100offTime >= 210) {
+                    timeFactor = 210;
+                } else if (tech100offTime <= 0) {
+                    timeFactor = 210 * 0.1;
+                } else {
+                    timeFactor = tech100offTime + (210 - tech100offTime) * 0.1;
+                }
+                
+                const requiredProd = neededIncome_210min / (timeFactor * 60 / 9);
+                comment = 'need to upgrade product value to ' + formatDisplayValue(requiredProd);
+            }
+            // Scenario 4: production is so extreme it exceeds storage with bonus
+            // "need to reduce product value to xxM"
+            else if (income_210min * 1.5 > storeMax && currentStock === 0) {
+                // Production is so high that income*1.5 exceeds storage capacity
+                const neededIncome_210min = storeMax / 1.5;
+                
+                let timeFactor;
+                if (tech100offTime >= 210) {
+                    timeFactor = 210;
+                } else if (tech100offTime <= 0) {
+                    timeFactor = 210 * 0.1;
+                } else {
+                    timeFactor = tech100offTime + (210 - tech100offTime) * 0.1;
+                }
+                
+                const requiredProd = neededIncome_210min / (timeFactor * 60 / 9);
+                comment = 'need to reduce product value to ' + formatDisplayValue(requiredProd);
+            }
+            // Scenario 5: default success (shouldn't reach here)
+            else {
+                comment = 'success, just keep wait after offline reward';
+            }
+            
+            commentElement.value = comment;
+        }
+
+        // Recalculate all target comments when basic data changes
+        function updateAllTargetComments() {
+            const resources = ['food', 'wood', 'stone', 'iron', 'chip', 'oil', 'ubattery'];
+            resources.forEach(resource => calculateTargetComment(resource));
+        }
+
+        // Recount target section - manual trigger
+        function recountTargetSection() {
+            updateAllTargetComments();
+            showStatusMessage('Target section recalculated!', 'success');
+        }
+
+        // Load data when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updateAllIncomes();
+            updateAllTargetComments();
+            
+            // Attach listeners to recalculate when prod or store values change
+            const resources = ['money', 'food', 'wood', 'stone', 'iron', 'chip', 'oil', 'ubattery'];
+            resources.forEach(resource => {
+                document.getElementById(resource + '_prod').addEventListener('change', function() {
+                    updateAllIncomes();
+                    updateAllTargetComments();
+                });
+                if (resource !== 'money') {
+                    document.getElementById(resource + '_store').addEventListener('change', function() {
+                        updateAllIncomes();
+                        updateAllTargetComments();
+                    });
+                }
+            });
+            
+            // Recalculate all when tech_100offTime changes
+            document.getElementById('tech_100offTime').addEventListener('change', updateAllIncomes);
+            
+            // Attach listeners to target section fields to recalculate comments
+            const targetResources = ['food', 'wood', 'stone', 'iron', 'chip', 'oil', 'ubattery'];
+            targetResources.forEach(resource => {
+                const targetField = document.getElementById('target_' + resource + '_target');
+                targetField.addEventListener('change', function() {
+                    // Validate that target stock is not negative
+                    let value = this.value;
+                    value = validateCurrentStock('target_' + resource + '_target', value);
+                    this.value = value;
+                    // Save to storage
+                    if (value) {
+                        setStorage('target_' + resource + '_target', value);
+                    } else {
+                        deleteStorage('target_' + resource + '_target');
+                    }
+                    calculateTargetComment(resource);
+                });
+                const currentField = document.getElementById('target_' + resource + '_current');
+                currentField.addEventListener('change', function() {
+                    // Validate that current stock is not negative
+                    let value = this.value;
+                    value = validateCurrentStock('target_' + resource + '_current', value);
+                    this.value = value;
+                    // Save to storage
+                    if (value) {
+                        setStorage('target_' + resource + '_current', value);
+                    } else {
+                        deleteStorage('target_' + resource + '_current');
+                    }
+                    calculateTargetComment(resource);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
